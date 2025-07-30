@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { streamService } from "@/api"
+import { streamService } from "@/api/streamService"
 
 
 interface ControlPanelProps {

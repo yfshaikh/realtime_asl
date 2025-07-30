@@ -1,4 +1,3 @@
-import { API_CONFIG } from './config'
 import type { Prediction } from '@/types'
 
 interface ApiResponse<T = any> {
@@ -32,7 +31,7 @@ class StreamService {
   private baseUrl: string
 
   constructor() {
-    this.baseUrl = API_CONFIG.BASE_URL
+    this.baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
   }
 
   private async request<T>(
@@ -73,37 +72,37 @@ class StreamService {
 
   // Stream Control
   async startStream(): Promise<{ message: string; settings?: StreamSettings }> {
-    return this.request(API_CONFIG.ENDPOINTS.START_STREAM, {
+    return this.request('/start_stream', {
       method: 'POST',
     })
   }
 
   async stopStream(): Promise<{ message: string }> {
-    return this.request(API_CONFIG.ENDPOINTS.STOP_STREAM, {
+    return this.request('/stop_stream', {
       method: 'POST',
     })
   }
 
   // Video Feed
   async getVideoFrame(): Promise<Blob> {
-    return this.request<Blob>(API_CONFIG.ENDPOINTS.VIDEO_FEED)
+    return this.request<Blob>('/video_feed')
   }
 
   // Predictions
   async getPredictions(): Promise<Prediction | { message: string }> {
-    return this.request(API_CONFIG.ENDPOINTS.PREDICTIONS)
+    return this.request('/predictions')
   }
 
   // Settings
   async setConfidenceThreshold(threshold: number): Promise<{ success: boolean; message: string; error?: string; current_settings?: StreamSettings }> {
-    return this.request(API_CONFIG.ENDPOINTS.THRESHOLD, {
+    return this.request('/threshold', {
       method: 'POST',
       body: JSON.stringify({ threshold }),
     })
   }
 
   async setZoomFactor(zoom_factor: number): Promise<{ success: boolean; message: string; error?: string; current_settings?: StreamSettings }> {
-    return this.request(API_CONFIG.ENDPOINTS.ZOOM, {
+    return this.request('/zoom', {
       method: 'POST',
       body: JSON.stringify({ zoom_factor }),
     })
@@ -111,15 +110,15 @@ class StreamService {
 
   // Status
   async getStatus(): Promise<StreamStatus> {
-    return this.request(API_CONFIG.ENDPOINTS.STATUS)
+    return this.request('/status')
   }
 
   async getCameraInfo(): Promise<any> {
-    return this.request(API_CONFIG.ENDPOINTS.CAMERA_INFO)
+    return this.request('/camera/info')
   }
 
   async healthCheck(): Promise<{ status: string; detector_loaded: boolean; camera_available: boolean; streaming: boolean }> {
-    return this.request(API_CONFIG.ENDPOINTS.HEALTH)
+    return this.request('/health')
   }
 }
 

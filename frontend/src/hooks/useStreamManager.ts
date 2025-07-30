@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { streamService } from '@/api/streamService'
-import { API_CONFIG } from '@/api/config'
 import { toast } from 'sonner'
 import type { Prediction } from '@/types'
 import type { StreamSettings } from '@/api/streamService'
@@ -29,6 +28,11 @@ interface UseStreamManagerReturn {
 }
 
 export function useStreamManager(): UseStreamManagerReturn {
+
+  // constants
+  const POLLING_FRAME_INTERVAL = 100
+  const POLLING_PREDICTION_INTERVAL = 1000
+  const REQUEST_TIMEOUT = 5000
   // Stream state
   const [isDetecting, setIsDetecting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -211,10 +215,10 @@ export function useStreamManager(): UseStreamManagerReturn {
   useEffect(() => {
     if (isDetecting) {
       // Start frame polling
-      frameIntervalRef.current = setInterval(fetchFrame, API_CONFIG.POLLING.FRAME_INTERVAL)
+      frameIntervalRef.current = setInterval(fetchFrame, POLLING_FRAME_INTERVAL)
       
       // Start prediction polling
-      predictionIntervalRef.current = setInterval(fetchPredictions, API_CONFIG.POLLING.PREDICTION_INTERVAL)
+      predictionIntervalRef.current = setInterval(fetchPredictions, POLLING_PREDICTION_INTERVAL)
     } else {
       // Clean up intervals
       if (frameIntervalRef.current) {
