@@ -30,6 +30,7 @@ interface StreamStatus {
 class StreamService {
   private baseUrl: string
 
+  // update env
   constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
   }
