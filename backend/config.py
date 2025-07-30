@@ -14,7 +14,13 @@ DEFAULT_HOST = "0.0.0.0"
 DEFAULT_PORT = 8000
 
 # CORS Configuration
-CORS_ORIGINS = ["*"]
+CORS_ORIGINS = [
+    "https://realtime-asl.vercel.app",  # Production frontend
+    "http://localhost:3000",            # Local development
+    "http://localhost:5173",            # Vite dev server
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+]
 
 # Logging Configuration
 LOG_FORMAT = '%(asctime)s - %(threadName)s - %(message)s'
