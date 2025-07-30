@@ -8,8 +8,9 @@ import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { setThreshold, setZoom as apiSetZoom } from "@/lib/api"
 import { toast } from "sonner"
+import { streamService } from "@/api"
+
 
 interface ControlPanelProps {
   confidence: number
@@ -55,12 +56,12 @@ export function ControlPanel({
     try {
       // Only update if values have changed
       if (localConfidence !== confidence) {
-        await setThreshold(localConfidence)
+        await streamService.setConfidenceThreshold(localConfidence)
         setConfidence(localConfidence)
       }
 
       if (localZoom !== zoom) {
-        await apiSetZoom(localZoom)
+        await streamService.setZoomFactor(localZoom)
         setZoom(localZoom)
       }
 
@@ -80,8 +81,8 @@ export function ControlPanel({
       const defaultConfidence = 0.7
       const defaultZoom = 1.0
 
-      await setThreshold(defaultConfidence)
-      await apiSetZoom(defaultZoom)
+      await streamService.setConfidenceThreshold(defaultConfidence)
+      await streamService.setZoomFactor(defaultZoom)
 
       setLocalConfidence(defaultConfidence)
       setLocalZoom(defaultZoom)

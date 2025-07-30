@@ -19,6 +19,7 @@ interface MainLayoutProps {
   setIsDetecting: (value: boolean) => void
   currentPrediction: Prediction | null
   predictionHistory: Prediction[]
+  currentFrame?: string | null
 }
 
 export function MainLayout({
@@ -31,6 +32,7 @@ export function MainLayout({
   setIsDetecting,
   currentPrediction,
   predictionHistory,
+  currentFrame,
 }: MainLayoutProps) {
   return (
     <main className="container py-6">
@@ -38,18 +40,18 @@ export function MainLayout({
         <div className="md:col-span-3 lg:col-span-4 space-y-6">
           <Card className="border-border/40 overflow-hidden">
             <CardContent className="p-0">
-              <VideoFeed isActive={isDetecting} zoom={zoom} />
+              <VideoFeed isActive={isDetecting} zoom={zoom} frameSource={currentFrame} />
             </CardContent>
           </Card>
 
-          <CurrentDetection isDetecting={isDetecting} isLoading={isLoading} prediction={currentPrediction} />
+          {/* <CurrentDetection isDetecting={isDetecting} isLoading={isLoading} prediction={currentPrediction} /> */}
         </div>
 
-        <div className="md:col-span-2 lg:col-span-2 flex flex-col h-full">
+        <div className="md:col-span-2 lg:col-span-2 flex flex-col h-130">
           <Tabs defaultValue="controls" className="flex flex-col flex-1">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="controls">Controls</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
+              {/* <TabsTrigger value="history">History</TabsTrigger> */}
               <TabsTrigger value="info">Info</TabsTrigger>
             </TabsList>
             <div className="flex-1 mt-4">

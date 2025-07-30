@@ -6,26 +6,30 @@ import { useEffect, useRef, useState } from "react"
 import { Camera, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { VIDEO_STREAM_URL } from "@/lib/api"
 
 interface VideoFeedProps {
   isActive: boolean
   zoom: number
+  frameSource?: string | null
 }
 
-export function VideoFeed({ isActive, zoom }: VideoFeedProps) {
+export function VideoFeed({ isActive, zoom, frameSource }: VideoFeedProps) {
   const videoRef = useRef<HTMLImageElement>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Set a timeout to simulate initial loading
-    const timer = setTimeout(() => {
+    // Set loading based on whether we have an active stream and frames
+    if (isActive && frameSource) {
       setLoading(false)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [])
+      setError(null)
+    } else if (isActive && !frameSource) {
+      setLoading(true)
+      setError(null)
+    } else {
+      setLoading(false)
+    }
+  }, [isActive, frameSource])
 
   return (
     <div className="relative aspect-video w-full overflow-hidden bg-black">
@@ -48,28 +52,29 @@ export function VideoFeed({ isActive, zoom }: VideoFeedProps) {
               Retry
             </Button>
           </div>
-        ) : (
+        ) : isActive && frameSource ? (
           <img
             ref={videoRef}
-            src={VIDEO_STREAM_URL || "/placeholder.svg"}
+            src={frameSource}
             alt="ASL detection video feed"
             className="w-full h-full object-cover"
             onError={() => setError("Failed to load video stream")}
           />
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-4">
+            <Camera className="h-12 w-12 text-muted-foreground" />
+            <p className="text-muted-foreground">Click Start Detection to begin</p>
+          </div>
         )}
       </div>
 
-
-
-
-
       {/* Status indicator */}
-      {isActive && !error && (
+      {/* {isActive && !error && frameSource && (
         <div className="absolute top-4 left-4 flex items-center gap-2 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full">
           <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
           <span className="text-xs font-medium">Recording</span>
         </div>
-      )}
+      )} */}
     </div>
   )
 }
