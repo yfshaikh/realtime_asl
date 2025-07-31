@@ -2,8 +2,9 @@ import logging
 from contextlib import asynccontextmanager
 from typing import List, Dict, Any
 
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 # Local imports
@@ -79,10 +80,10 @@ app = FastAPI(title="ASL Letter Detection API", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
-    allow_credentials=True,
+    allow_credentials=False,  # Changed to False to avoid credential issues
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
-    expose_headers=["*"],
+    max_age=600,  # Cache preflight requests for 10 minutes
 )
 
 # Request models
@@ -235,6 +236,28 @@ async def health_check():
         "detector_loaded": detector is not None,
         "camera_available": camera_manager is not None,
         "streaming": camera_manager.is_running() if camera_manager else False
+    }
+
+@app.options("/{path:path}")
+async def handle_options(request: Request):
+    """Handle preflight OPTIONS requests"""
+    return JSONResponse(
+        content={"message": "OK"},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "600",
+        }
+    )
+
+@app.get("/cors-test")
+async def cors_test():
+    """Simple endpoint to test CORS"""
+    return {
+        "message": "CORS is working!",
+        "timestamp": str(__import__('datetime').datetime.now()),
+        "cors_origins": CORS_ORIGINS
     }
 
 if __name__ == "__main__":

@@ -20,6 +20,7 @@ CORS_ORIGINS = [
     "http://localhost:5173",            # Vite dev server
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
+    "*"  # Fallback for Vercel deployment issues
 ]
 
 # Logging Configuration
