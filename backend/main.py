@@ -76,21 +76,10 @@ async def lifespan(app: FastAPI):
 # Create FastAPI app
 app = FastAPI(title="ASL Letter Detection API", lifespan=lifespan)
 
-
-# CORS Configuration
-origins = [
-    "https://realtime-asl.vercel.app",  # Production frontend
-    "http://localhost:3000",            # Local development
-    "http://localhost:5173",            # Vite dev server
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5173",
-    "*"  # Fallback for Vercel deployment issues
-]
-
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,  # Changed to False to avoid credential issues
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
