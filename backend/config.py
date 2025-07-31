@@ -1,7 +1,9 @@
 # Configuration settings for ASL Detection Application
 
 # Model Configuration
-DEFAULT_MODEL_PATH = './models/asl_letter_yolo.pt'
+# For local development, use local path. For production, use GCP bucket URL
+DEFAULT_MODEL_PATH = 'https://storage.googleapis.com/ml-model-bucket-1/asl_letter_yolo.pt'
+# LOCAL_MODEL_PATH = './models/asl_letter_yolo.pt'  # Uncomment for local dev
 DEFAULT_CONFIDENCE_THRESHOLD = 0.5
 DEFAULT_ZOOM_FACTOR = 1.0
 
